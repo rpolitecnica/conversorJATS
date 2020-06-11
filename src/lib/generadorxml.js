@@ -2,6 +2,7 @@ const xmlbuilder = require('xmlbuilder');
 const fs = require('fs');
 const dirPath = __dirname + "/../public/xmlfiles/";
 const pool = require('../database');
+const dbname = require('../keys'),
 const creadorXML = {};
 
 creadorXML.crearArchivoXML =  async (idArtic) => {
@@ -15,10 +16,10 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
   const totKeyw = await pool.query('SELECT @num_ref_lines  := 1 + length(keywords) - length(replace(keywords, "\n", "")) as keyWord FROM articulo WHERE idArtic = ?', [idArtic]);
   const totReferencias = await pool.query('SELECT @num_ref_lines  := 1 + length(referencias) - length(replace(referencias, "\n", "")) as num_ref_lines FROM articulo WHERE idArtic = ?', [idArtic]);
 
-  const autoresData = await pool.query('call bdrevistapoli.checkAutores(?, ?)', [idArtic, totAutores[0].autorES]);
-  const palabClavesData = await pool.query('call bdrevistapoli.checkPalClaves(?, ?)', [idArtic, totPalaClaves[0].palabClaves]);
-  const keywordsData = await pool.query('call bdrevistapoli.checkKeywords(?, ?)', [idArtic, totKeyw[0].keyWord]);
-  const referenciaData = await pool.query('call bdrevistapoli.checkReferencias(?, ?)', [idArtic, totReferencias[0].num_ref_lines]);
+  const autoresData = await pool.query('call '+dbname.database.database+'.checkAutores(?, ?)', [idArtic, totAutores[0].autorES]);
+  const palabClavesData = await pool.query('call '+dbname.database.database+'.checkPalClaves(?, ?)', [idArtic, totPalaClaves[0].palabClaves]);
+  const keywordsData = await pool.query('call '+dbname.database.database+'.checkKeywords(?, ?)', [idArtic, totKeyw[0].keyWord]);
+  const referenciaData = await pool.query('call '+dbname.database.database+'.checkReferencias(?, ?)', [idArtic, totReferencias[0].num_ref_lines]);
 
   //Se recuperan los autores y se separan para insertarlos en el XML
   var todosAutores = [];
