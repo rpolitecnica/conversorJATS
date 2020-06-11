@@ -2,7 +2,7 @@ const xmlbuilder = require('xmlbuilder');
 const fs = require('fs');
 const dirPath = __dirname + "/../public/xmlfiles/";
 const pool = require('../database');
-const dbname = require('../keys'),
+const dbname = require('../keys');
 const creadorXML = {};
 
 creadorXML.crearArchivoXML =  async (idArtic) => {
