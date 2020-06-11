@@ -1,0 +1,27 @@
+<div class="container p-4">
+  <div class="text-dark text-center p-4">
+    <h3>EDICIONES</h3>
+  </div>
+  <div class="row">
+    {{#each links}}
+      <div class="col-sm-4 col-md-6 col-lg-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h4 class="card-title text-capitalize text-primary">
+              <a href="/publicacion/{{idPublica}}">Numero {{numero}}</a>
+            </h4>
+            <p>Año {{anyo}}</p>
+            <p>Volumen {{volumen}}</p>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>No hay ediciones creadas</p>
+          <a href="/profile">Mi Perfil</a>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

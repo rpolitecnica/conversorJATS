@@ -1,0 +1,28 @@
+<div class="container p-4">
+  <div class="text-dark text-center p-4">
+    <h3>ARTICULOS</h3>
+  </div>
+  <div class="row">
+    {{#each links}}
+      <div class="col-sm-4 col-md-6 col-lg-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h5 class="card-title text-capitalize text-primary">
+              <a href="/visualarticle/{{idArtic}}" target="_blank">{{titulo}}</a>
+            </h5>
+            <p>Pags: {{pagInicial}} - {{pagFinal}}</p>
+            <p>Autores: {{autores}}</p>
+            <a href="/descargarxml/{{idArtic}}">xml</a>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>No hay artículos creados</p>
+          <a href="/profile">Mi Perfil</a>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

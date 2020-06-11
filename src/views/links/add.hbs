@@ -1,0 +1,98 @@
+<div class="container p-4">
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-7 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <form action="/links/add/{{id}}" method="POST">
+              <div class="form-group">
+                <h3 class="text-center">Registro Artículo</h3>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="titulo" placeholder="Título" autofocus required>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="title" placeholder="Title" required>
+              </div>
+              <!--
+              <div class="form-group">
+                <input type="number" class="form-control" name="anyo" min="1900" placeholder="Año" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="volumen" min="1" placeholder="Volumen" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="numero" min="1" placeholder="Número Revista" required>
+              </div>
+              -->
+              <div class="form-group">
+                <label for="edicion">Seleccione la edición  </label>
+                <select name="edicion" required>
+                  {{#each ediciones}}
+                    <option value={{idPublica}}>Año: {{anyo}} - Volumen: {{volumen}} - Número: {{numero}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="numArticulo" min="1" placeholder="Número Artículo" required>
+              </div>
+              <div class="form-group">
+                <input type="url" class="form-control" name="doi" placeholder="URL DOI" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="pagInicial" min="1" placeholder="Página inicial" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="pagFinal" min="1" placeholder="Página final" required>
+              </div>
+              <div class="form-group input-group">
+                <textarea rows="6" class="form-control" name="autores" placeholder="Autor(es).
+Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma al final y enter para ingresar otro autor)" required></textarea>
+              </div>
+              <div class="form-group input-group-append">
+                <label for="fecRecibido">Fecha recibido</label>
+                <input type="date" class="form-control" name="fecRecibido" required>
+              </div>
+              <div class="form-group input-group-append">
+                <label for="fecAceptado">Fecha aceptado</label>
+                <input type="date" class="form-control" name="fecAceptado" required>
+              </div>
+              <div class="form-group input-group-append">
+                <label for="fecPublicacion">Fecha publicación</label>
+                <input type="date" class="form-control" name="fecPublicacion" required>
+              </div>
+              <div class="form-group">
+                <textarea rows="6" class="form-control" name="resumen" placeholder="Resumen" required></textarea>
+              </div>
+              <div class="form-group">
+                <textarea rows="6" class="form-control" name="abstract" placeholder="Abstract" required></textarea>
+              </div>
+              <div class="form-group">
+                <textarea rows="4" class="form-control" name="palClaves" placeholder="Palabras Claves" required></textarea>
+              </div>
+              <div class="form-group">
+                <textarea rows="4" class="form-control" name="keywords" placeholder="Keywords" required></textarea>
+              </div>
+              <div class="form-group">
+                <textarea rows="4" class="form-control" name="agradecimientos" placeholder="Agradecimientos"></textarea>
+              </div>
+              <div class="form-group">
+                <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)
+* Referencia según la norma, termina con punto y coma y enter para ingresar una referencia.
+
+Ej: Objetivos de Desarrollo Sostenible. PNUD Colombia [En línea]
+Disponible: http://www.co.undp.org/content/colombia/es/home/sustainable-development-goals.html;" required></textarea>
+              </div>
+              <div class="form-group">
+                <input type="url" class="form-control" name="urlgaleradahtml" placeholder="URL Galerada HTML" required>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-success btn-block">
+                  Save
+                </button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

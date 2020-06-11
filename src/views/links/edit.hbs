@@ -1,0 +1,99 @@
+<div class="container p-4">
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-7 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <form action="/links/edit/{{link.idArtic}}" method="POST">
+              <div class="form-group">
+                <h3 class="text-center">Editar Artículo</h3>
+              </div>
+              <div class="form-group">
+                <label for="titulo">Titulo</label>
+                <input type="text" value="{{link.titulo}}" class="form-control" name="titulo" placeholder="Título" autofocus required>
+              </div>
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" value="{{link.title}}" class="form-control" name="title" placeholder="Title" required>
+              </div>
+              <!--
+              <div class="form-group">
+                <label for="numArticulo" style="display: none;">Número Artículo</label>
+                <input type="number" style="display: none;" value="{{link.numArticulo}}" class="form-control" name="numArticulo" min="1" placeholder="Número Artículo" required>
+              </div>
+              -->
+              <div class="form-group">
+                <label for="roi">URL DOI</label>
+                <input type="url" value="{{link.doi}}" class="form-control" name="doi" placeholder="URL DOI" required>
+              </div>
+              <!--
+              <div class="form-group">
+                <label for="pagInicial" style="display: none;">Página Inicial</label>
+                <input type="number" style="display: none;" value="{{link.pagInicial}}" class="form-control" name="pagInicial" min="1" placeholder="Página inicial" required>
+              </div>
+              <div class="form-group">
+                <label for="pagFinal" style="display: none;">Página Final</label>
+                <input type="number" style="display: none;" value="{{link.pagFinal}}" class="form-control" name="pagFinal" min="1" placeholder="Página final" required>
+              </div>
+              -->
+              <div class="form-group">
+                <label for="autores">Autor(es)</label>
+                <textarea rows="6" class="form-control" name="autores" placeholder="Autor(es).
+Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma al final y enter para ingresar otro autor)" required>{{link.autores}}</textarea>
+              </div>
+              <!--
+              <div class="form-group input-group-append">
+                <label for="fecRecibido" style="display: none;">Fecha recibido</label>
+                <input type="date" style="display: none;" class="form-control" name="fecRecibido" required>
+              </div>
+              <div class="form-group input-group-append">
+                <label for="fecAceptado" style="display: none;">Fecha aceptado</label>
+                <input type="date" style="display: none;" class="form-control" name="fecAceptado" required>
+              </div>
+              <div class="form-group input-group-append">
+                <label for="fecPublicacion" style="display: none;">Fecha publicación</label>
+                <input type="date" style="display: none;" class="form-control" name="fecPublicacion" required>
+              </div>
+              -->
+              <div class="form-group">
+                <label for="resumen">Resumen</label>
+                <textarea rows="6" class="form-control" name="resumen" placeholder="Resumen" required>{{link.resumen}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="abstract">Abstract</label>
+                <textarea rows="6" class="form-control" name="abstract" placeholder="Abstract" required>{{link.abstract}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="palClaves">Palabras Claves</label>
+                <textarea rows="4" class="form-control" name="palClaves" placeholder="Palabras Claves" required>{{link.palClaves}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="keywords">Keywords</label>
+                <textarea rows="4" class="form-control" name="keywords" placeholder="Keywords" required>{{link.keywords}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="agradecimientos">Agradecimientos</label>
+                <textarea rows="4" class="form-control" name="agradecimientos" placeholder="Agradecimientos">{{link.agradecimientos}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="referencias">Referencia(s)</label>
+                <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)
+* Referencia según la norma, termina con punto y coma y enter para ingresar una referencia.
+
+Ej: Objetivos de Desarrollo Sostenible. PNUD Colombia [En línea]
+Disponible: http://www.co.undp.org/content/colombia/es/home/sustainable-development-goals.html;" required>{{link.referencias}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="galeradahtml">URL Galerada HTML</label>
+                <input type="url" value="{{link.urlgaleradahtml}}" class="form-control" name="urlgaleradahtml" placeholder="URL Galerada HTML" required>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-success btn-block">
+                  Save
+                </button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+{
+  "name": "conversorJATS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/",
+    "start": "node ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.3",
+    "express-mysql-session": "^2.1.4",
+    "express-session": "^1.17.0",
+    "express-validator": "^6.4.0",
+    "file-saver": "^2.0.2",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "nodejs-base64-encode": "^1.1.0",
+    "nodemailer": "^6.4.8",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "timeago.js": "^4.0.2",
+    "window": "^4.2.7",
+    "xmlbuilder": "^15.1.1",
+    "xslt": "^0.9.1",
+    "xslt-processor": "^0.11.5",
+    "xth": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}

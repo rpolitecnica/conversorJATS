@@ -1,0 +1,31 @@
+<div class="container p-4">
+  <div class="text-dark text-center p-4">
+    <h3>MIS ARTICULOS</h3>
+  </div>
+  <div class="row">
+    {{#each links}}
+      <div class="col-sm-3 col-md-6 col-lg-4"> <!--Numero de columnas por pagina-->
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <a href="/visualarticle/{{idArtic}}" target="_blank">
+              <h5 class="card-title text-capitalize">
+                {{titulo}}
+              </h5>
+            </a>
+            <!--<p class="m-2">{{description}}</p>-->
+            <p>Created {{timeago created_articulo}}</p>
+            <a href="/links/delete/{{idArtic}}" class="btn btn-danger">Delete</a>
+            <a href="/links/edit/{{idArtic}}" class="btn btn-secondary">Edit</a>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>No hay artículos creados</p>
+          <a href="/profile">Mi Perfil</a>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
