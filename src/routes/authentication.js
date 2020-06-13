@@ -13,13 +13,6 @@ const { transporter, mailOptions } = require('../lib/email');
 
 
 
-//Manejador de los articulos segun la publicacion
-router.get('/publicacion/:idPublica', isLoggedIn, async (req, res) => {
- const { idPublica } = req.params;
-  const links = await pool.query('SELECT * FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE publicacion.idPublica = ? ORDER BY pagInicial ASC', [idPublica]);//SELECT usert.fullname, articulo.title, date_format(articulo.created_at,"%d-%M-%Y") as created_at FROM usert inner join articulo ON articulo.usert_id = usert.id');
-  res.render('links/articles', { links });
-});
-
 //Construye el archivo xml y gestiona la descarga
 router.get('/downloadxml/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;

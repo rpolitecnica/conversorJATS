@@ -6,11 +6,55 @@ const { isLoggedIn } = require('../lib/auth')
 //Manejador de las Publicaciones
 router.get('/archives/:id', async (req, res) => {
   const { id } = req.params;
-  const links = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY numero DESC', [id]);//SELECT usert.fullname, articulo.title, date_format(articulo.created_at,"%d-%M-%Y") as created_at FROM usert inner join articulo ON articulo.usert_id = usert.id');
-  res.render('links/archives', { links });
+  //const links = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  const links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, count(idArtic) as total \
+  FROM publicacion \
+  LEFT OUTER JOIN articulo \
+  ON publicacion.idPublica=articulo.publicacion_id \
+  WHERE usert_id = 1 \
+  GROUP BY idPublica \
+  ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  res.render('links/archives', { links, id: id });
 });
 
 
+//Manejador de los articulos segun la publicacion
+router.get('/publicacion/:idPublica', isLoggedIn, async (req, res) => {
+  const { idPublica } = req.params;
+   const links = await pool.query('SELECT * FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE publicacion.idPublica = ? ORDER BY pagInicial ASC', [idPublica]);//SELECT usert.fullname, articulo.title, date_format(articulo.created_at,"%d-%M-%Y") as created_at FROM usert inner join articulo ON articulo.usert_id = usert.id');
+   res.render('links/articles', { links });
+ });
+
+//GET Router para editar la Edicion (publicacion)
+router.get('/editEdicion/:idPublica', isLoggedIn, async (req, res) => {
+  const { idPublica } = req.params;
+  const links = await pool.query('SELECT * FROM publicacion WHERE idPublica = ?', [idPublica]);
+  res.render('links/publicationedit', { link: links[0] });
+});
+
+//POST Router para guardar la edicion Editada
+router.post('/editEdicion/:idPublica', isLoggedIn, async (req, res) => {
+  const { idPublica } = req.params;
+  const { anyo, volumen, numero } = req.body;
+  const validarEdicion = await pool.query('SELECT idPublica FROM publicacion WHERE anyo = ? AND volumen = ? AND numero = ? ', [anyo, volumen, numero]);
+
+  if (validarEdicion == 0 || validarEdicion[0].idPublica == idPublica) {
+    const editPublicacion = {
+      anyo,
+      volumen,
+      numero
+    };
+    await pool.query('UPDATE publicacion SET ? WHERE idPublica = ?', [editPublicacion, idPublica]);
+    req.flash('success', 'Edición guardada');
+  } else {
+    req.flash('message', 'Publicación ya existe.');
+  }
+  const usert_id = await pool.query('SELECT usert_id FROM publicacion WHERE idPublica = ?', [idPublica]);
+  res.redirect('/links/archives/'+ usert_id[0].usert_id);
+});
+
+
+//GET Router para formulario para guardar articulo
 router.get('/add/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   const publicacionUser = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY numero DESC', [id]);
@@ -22,7 +66,7 @@ router.get('/add/:id', isLoggedIn, async (req, res) => {
   };
 });
 
-//INGRESO NUEVO ARTICULO  - ***FALTA ARREGLAR QUE VALIDE LAS PAGINAS INGRESADAS****
+//GET Router para guardar articulo
 router.post('/add/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params
   const { titulo, title, edicion, numArticulo, doi, pagInicial, pagFinal,
@@ -92,13 +136,13 @@ router.post('/add/:id', isLoggedIn, async (req, res) => {
   }
 });
 
-
+//GET Router de formulario para crear Edicion
 router.get('/publication/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params
   res.render('links/publication', {id: id});
 });
 
-
+//GET Router para guardar Edicion
 router.post('/publication/:id', isLoggedIn, async (req, res) => {
   const { anyo, volumen, numero } = req.body;
   const { id } = req.params;
@@ -115,17 +159,21 @@ router.post('/publication/:id', isLoggedIn, async (req, res) => {
   } else {
     req.flash('message', 'Publicación ya existe.');
   }
-  const links = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY numero DESC', [id]);
-  res.render('links/archives', { links });
+  res.redirect('/links/archives/'+ id);
 });
 
-
+//GET Router para listar todos los articulos del usuario
 router.get('/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  const links = await pool.query('SELECT * FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE publicacion.idPublica IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) ORDER BY publicacion.numero DESC', [id]);//('SELECT * FROM articulo WHERE usert_id = ?', [id]);
+  const links = await pool.query('SELECT * FROM articulo JOIN publicacion \
+  ON publicacion.idPublica=articulo.publicacion_id \
+  WHERE publicacion.idPublica \
+  IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) \
+  ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
   res.render('links/list', { links, id: id });
 });
 
+//Router para borrar un articulo
 router.get('/delete/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
@@ -134,14 +182,14 @@ router.get('/delete/:idArtic', isLoggedIn, async (req, res) => {
   res.redirect('/links/'+usert_id[0].usert_id) //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
 });
 
-
+//GET Router para editar el articulo
 router.get('/edit/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const links = await pool.query('SELECT * FROM articulo WHERE idArtic = ?', [idArtic]);
   res.render('links/edit', { link: links[0] });
 });
 
-
+//POST Router para guardar el articulo editado
 router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite editar el numero de publicación
   const { idArtic } = req.params;
   const { titulo, title, doi, autores, resumen, abstract, palClaves, keywords,
