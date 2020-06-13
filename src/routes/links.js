@@ -4,7 +4,7 @@ const pool = require('../database');
 const { isLoggedIn } = require('../lib/auth')
 
 //Manejador de las Publicaciones
-router.get('/archives/:id', async (req, res) => {
+router.get('/archives/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   //const links = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
   const links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, count(idArtic) as total \
