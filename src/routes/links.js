@@ -11,7 +11,7 @@ router.get('/archives/:id', async (req, res) => {
   FROM publicacion \
   LEFT OUTER JOIN articulo \
   ON publicacion.idPublica=articulo.publicacion_id \
-  WHERE usert_id = 1 \
+  WHERE usert_id = ? \
   GROUP BY idPublica \
   ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
   res.render('links/archives', { links, id: id });
