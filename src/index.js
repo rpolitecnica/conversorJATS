@@ -30,6 +30,9 @@ app.use(session({
   secret: 'sessionarticulosrevistanode',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    maxAge: 43200000
+  },
   store: new MySQLStore(database)
 }));
 app.use(flash());

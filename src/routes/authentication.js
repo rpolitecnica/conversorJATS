@@ -14,6 +14,7 @@ const { transporter, mailOptions } = require('../lib/email');
 
 
 //Construye el archivo xml y gestiona la descarga
+//NO USADO
 router.get('/downloadxml/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const allData = await pool.query('SELECT titulo, title, numArticulo, pagInicial, pagFinal, fecRecibido, fecAceptado, fecPublicacion, resumen, abstract, agradecimientos, doi, urlgaleradahtml, publicacion_id FROM articulo WHERE idArtic = ?', [idArtic]);
