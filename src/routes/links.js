@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
-const { isLoggedIn } = require('../lib/auth')
+const { isLoggedIn, isAdmin } = require('../lib/auth')
 
 //Manejador de las Publicaciones
 router.get('/archives/:id', isLoggedIn, async (req, res) => {
@@ -178,13 +178,78 @@ router.get('/:id', isLoggedIn, async (req, res) => {
   res.render('links/list', { links, id: id });
 });
 
+//GET crear usuarios
+router.get('/adduser', isLoggedIn, isAdmin, async (req, res) => {
+  res.render('links/adduser')
+});
+
+//GET Listar usuarios si quien ingresa es administrador
+router.get('/listusers/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const links = await pool.query('SELECT * FROM usert');// WHERE id != ?', [id]);
+  links.forEach(element => {
+    if (element.tipousuario_id == 1) {
+      element.tipousuario_id = 'Administrador';
+    } else {
+      element.tipousuario_id = 'Usuario';
+    }
+  });
+  res.render('links/listusers', { links });
+});
+
+
+//Router borrar un usuario
+router.get('/deleteuser/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const tipousuario = await pool.query('SELECT tipousuario_id \
+  FROM usert \
+  WHERE id = ?', [id]);
+  if (tipousuario[0].tipousuario_id == 1) {
+    req.flash('message', 'No se puede borrar un Administrador');
+  } else {
+    await pool.query('DELETE FROM usert WHERE id = ?', [id]);
+    req.flash('success', 'Usuario eliminado');
+  }
+  res.redirect('/profile');
+});
+
+//Router para editar un usuario
+router.get('/edituser/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const links = await pool.query('SELECT id, username, fullname, tipousuario_id \
+  FROM usert \
+  WHERE id = ?', [id]);
+  if (links[0].tipousuario_id == 1) {
+    req.flash('message', 'No se puede editar un Administrador');
+    res.redirect('/profile');
+  } else {
+    console.log(links[0]);
+    res.render('links/edituser', { link: links[0] });
+  }
+});
+
+//Router guarda los cambios del usuario
+router.post('/edituser/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { fullname, username, tipousuario_id } = req.body;
+  const editUser = {
+    username,
+    fullname,
+    tipousuario_id
+  };
+  await pool.query('UPDATE usert SET ? WHERE id = ?', [editUser, id]);
+  req.flash('success', 'Datos guardados');
+  res.redirect('/profile');
+});
+
+
 //Router para borrar un articulo
 router.get('/delete/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
   await pool.query('DELETE FROM articulo WHERE idArtic = ?', [idArtic]);
   req.flash('success', 'Articulo eliminado');
-  res.redirect('/links/'+usert_id[0].usert_id) //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
+  res.redirect('/links/' + usert_id[0].usert_id); //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
 });
 
 //GET Router para editar el articulo

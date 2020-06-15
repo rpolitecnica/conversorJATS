@@ -11,6 +11,13 @@ module.exports = {
       return next();
     }
     return res.redirect('/profile');
+  },
+
+  isAdmin(req, res, next) {
+    if (req.user.tipousuario_id == 1) {
+      return next();
+    }
+    return res.redirect('/profile');
   }
 
 }

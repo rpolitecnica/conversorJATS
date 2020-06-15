@@ -1,0 +1,39 @@
+<div class="container p-4">
+  <div class="text-dark text-center p-4">
+    <h3>USUARIOS</h3>
+  </div>
+  <div class="row">
+    <table>
+      <thead>
+        <tr>
+          <th>ID del Usuario</th>
+          <th>Nombre Completo</th>
+          <th>Username</th>
+          <th>Tipo de Usuario</th>
+          <th>Fecha de Creación</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each links}}
+        <tr>
+          <td>{{id}}</td>
+          <td>{{fullname}}</td>
+          <td>{{username}}</td>
+          <td>{{tipousuario_id}}</td>
+          <td>{{timeago created_usert}}</td>
+          <td><a href="/links/deleteuser/{{id}}" class="btn btn-danger">Borrar</a></td>
+          <td><a href="/links/edituser/{{id}}" class="btn btn-secondary">Editar</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+      <!--
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>No existen otros usuarios</p>
+          <a href="/profile">Mi Perfil</a>
+        </div>
+      </div>
+      -->
+  </div>
+</div>

@@ -35,3 +35,19 @@ body {
   }
 }
 
+table{
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #333;
+  text-align: center;
+
+}
+
+th {
+  border-bottom: 2px solid #333;
+  text-align: center;
+}
+
+

@@ -1,0 +1,36 @@
+<div class="container p-4">
+  <div class="rom">
+    <div class="col-md-4 mx-auto">
+      <div class="card">
+        <div class="card-header text-center">
+          <h3>Crear Usuario</h3>
+        </div>
+        <div class="card-body">
+          <form action="/links/adduser" method="POST">
+            <div class="form-group">
+              <input type="text" name="fullname" placeholder="Nombre Completo" class="form-control" autofocus required>
+            </div>
+            <div class="form-group">
+              <input type="email" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" name="username" placeholder="Email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <input type="passwrd" name="password" placeholder="Contraseña" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="username">Tipo de Usuario</label>
+              <select name="tipousuario_id" required>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-success btn-block">
+                Guargar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
