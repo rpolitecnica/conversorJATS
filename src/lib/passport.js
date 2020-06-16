@@ -40,7 +40,7 @@ passport.use('local.signup', new localStrategy({
       newUser.password = await helpers.encryptPassword(password);
       const result = await pool.query('INSERT INTO usert SET ?', [newUser]);
       newUser.id = result.insertId;
-      return done(null, newUser, req.flash('success', 'Bienvenido ' + newUser.username));
+      return done(null, newUser, req.flash('success', 'Usuario creado ' + newUser.username));
     }
 }));
 

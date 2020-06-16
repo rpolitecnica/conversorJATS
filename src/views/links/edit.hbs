@@ -36,9 +36,21 @@
               </div>
               -->
               <div class="form-group">
-                <label for="autores">Autor(es)</label>
-                <textarea rows="6" class="form-control" name="autores" placeholder="Autor(es).
-Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma al final y enter para ingresar otro autor)" required>{{link.autores}}</textarea>
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Autor(es)</b>. Ejemplos</p>
+                      <p>Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; <br />
+                      Apellido1 Apellido2, Nombre1 Nombre2.;</p>
+                      <p>Nota 1: El texto del Email es opcional. <br />
+                      Nota 2: Cada autor debe ir en una línea y con punto y coma al final.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="autores">Autor(es)</label>
+                  <textarea rows="8" class="form-control" name="autores" placeholder="Autor(es)." required>{{link.autores}}</textarea>
+                </div>
               </div>
               <!--
               <div class="form-group input-group-append">
@@ -56,31 +68,53 @@ Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma
               -->
               <div class="form-group">
                 <label for="resumen">Resumen</label>
-                <textarea rows="6" class="form-control" name="resumen" placeholder="Resumen" required>{{link.resumen}}</textarea>
+                <textarea rows="10" class="form-control" name="resumen" placeholder="Resumen" required>{{link.resumen}}</textarea>
               </div>
               <div class="form-group">
                 <label for="abstract">Abstract</label>
-                <textarea rows="6" class="form-control" name="abstract" placeholder="Abstract" required>{{link.abstract}}</textarea>
+                <textarea rows="10" class="form-control" name="abstract" placeholder="Abstract" required>{{link.abstract}}</textarea>
               </div>
               <div class="form-group">
-                <label for="palClaves">Palabras Claves</label>
-                <textarea rows="4" class="form-control" name="palClaves" placeholder="Palabras Claves" required>{{link.palClaves}}</textarea>
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Palabras Claves</b> Ejemplos:</p>
+                      <p>Informática;<br />
+                      Ingeniería;</p>
+                      <p>Nota 1: Cada palabra clave debe ir en una línea y con punto y coma al final. <br />
+                      Lo mismo aplica para el campo <b>Keywords</b>. Ejemplos:</p>
+                      <p>Informatics; <br />
+                      Engineering;</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="palClaves">Palabras Claves</label>
+                  <textarea rows="8" class="form-control" name="palClaves" placeholder="Palabras Claves" required>{{link.palClaves}}</textarea>
+                </div>
               </div>
               <div class="form-group">
                 <label for="keywords">Keywords</label>
-                <textarea rows="4" class="form-control" name="keywords" placeholder="Keywords" required>{{link.keywords}}</textarea>
+                <textarea rows="8" class="form-control" name="keywords" placeholder="Keywords" required>{{link.keywords}}</textarea>
               </div>
               <div class="form-group">
                 <label for="agradecimientos">Agradecimientos</label>
                 <textarea rows="4" class="form-control" name="agradecimientos" placeholder="Agradecimientos">{{link.agradecimientos}}</textarea>
               </div>
               <div class="form-group">
-                <label for="referencias">Referencia(s)</label>
-                <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)
-* Referencia según la norma, termina con punto y coma y enter para ingresar una referencia.
-
-Ej: Objetivos de Desarrollo Sostenible. PNUD Colombia [En línea]
-Disponible: http://www.co.undp.org/content/colombia/es/home/sustainable-development-goals.html;" required>{{link.referencias}}</textarea>
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Referencias</b>. Ejemplos:</p>
+                      <p>M. Nelles, J. Grünes, G. Morscheck G., “Waste Management in Germany – Development to a Sustainable Circular Economy?”, Procedia Environmental Sciences, vol. 35, 6-14, 2016, [En línea] Disponible: https://doi.org/10.1016/j.proenv.2016.07.001;</p>
+                      <p>Nota 1: Cada referencia debe ir en una línea y con punto y coma al final.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="referencias">Referencia(s)</label>
+                  <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)" required>{{link.referencias}}</textarea>
+                </div>
               </div>
               <div class="form-group">
                 <label for="galeradahtml">URL galerada HTML y PDF</label>

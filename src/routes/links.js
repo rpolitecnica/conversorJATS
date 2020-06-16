@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 const { isLoggedIn, isAdmin } = require('../lib/auth')
+const helpers = require('../lib/helpers');
 
 //Manejador de las Publicaciones
 router.get('/archives/:id', isLoggedIn, async (req, res) => {
@@ -29,6 +30,8 @@ router.get('/publicacion/:idPublica', isLoggedIn, async (req, res) => {
    ORDER BY pagInicial ASC', [idPublica]);
    res.render('links/articles', { links });
  });
+
+
 
 //GET Router para editar la Edicion (publicacion)
 router.get('/editEdicion/:idPublica', isLoggedIn, async (req, res) => {
@@ -178,9 +181,31 @@ router.get('/:id', isLoggedIn, async (req, res) => {
   res.render('links/list', { links, id: id });
 });
 
+
 //GET crear usuarios
-router.get('/adduser', isLoggedIn, isAdmin, async (req, res) => {
-  res.render('links/adduser')
+router.get('/adduser/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  res.render('links/adduser', {id});
+});
+
+//POST Guardar usuario creado
+router.post('/adduser/:id', isLoggedIn, isAdmin, async (req, res) => {
+  const { fullname, username, password, tipousuario_id } = req.body;
+  const newUser = {
+    username,
+    password,
+    fullname,
+    tipousuario_id
+  };
+  const rows = await pool.query('SELECT * FROM usert WHERE username = ?', [username]);
+  if (rows.length > 0) {
+    req.flash('message', 'Usuario ya existe');
+  } else {
+    newUser.password = await helpers.encryptPassword(password);
+    await pool.query('INSERT INTO usert SET ?', [newUser]);
+    req.flash('success', 'Usuario creado.');
+  }
+  res.redirect('/profile');
 });
 
 //GET Listar usuarios si quien ingresa es administrador
@@ -223,7 +248,6 @@ router.get('/edituser/:id', isLoggedIn, isAdmin, async (req, res) => {
     req.flash('message', 'No se puede editar un Administrador');
     res.redirect('/profile');
   } else {
-    console.log(links[0]);
     res.render('links/edituser', { link: links[0] });
   }
 });

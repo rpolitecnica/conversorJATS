@@ -44,9 +44,21 @@
               <div class="form-group">
                 <input type="number" class="form-control" name="pagFinal" min="1" placeholder="Página final" required>
               </div>
-              <div class="form-group input-group">
-                <textarea rows="6" class="form-control" name="autores" placeholder="Autor(es).
-Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma al final y enter para ingresar otro autor)" required></textarea>
+              <div class="form-group">
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Autor(es)</b>. Ejemplos</p>
+                      <p>Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; <br />
+                      Apellido1 Apellido2, Nombre1 Nombre2.;</p>
+                      <p>Nota 1: El texto del Email es opcional. <br />
+                      Nota 2: Cada autor debe ir en una línea y con punto y coma al final.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group input-group">
+                  <textarea rows="8" class="form-control" name="autores" placeholder="Autor(es)" required></textarea>
+                </div>
               </div>
               <div class="form-group input-group-append">
                 <label for="fecRecibido">Fecha recibido</label>
@@ -61,26 +73,48 @@ Ej: Apellido1 Apellido2, Nombre1 Nombre2. Email: usuario@mail.com; (Punto y coma
                 <input type="date" class="form-control" name="fecPublicacion" required>
               </div>
               <div class="form-group">
-                <textarea rows="6" class="form-control" name="resumen" placeholder="Resumen" required></textarea>
+                <textarea rows="10" class="form-control" name="resumen" placeholder="Resumen" required></textarea>
               </div>
               <div class="form-group">
-                <textarea rows="6" class="form-control" name="abstract" placeholder="Abstract" required></textarea>
+                <textarea rows="10" class="form-control" name="abstract" placeholder="Abstract" required></textarea>
               </div>
               <div class="form-group">
-                <textarea rows="4" class="form-control" name="palClaves" placeholder="Palabras Claves" required></textarea>
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Palabras Claves</b> Ejemplos:</p>
+                      <p>Informática;<br />
+                      Ingeniería;</p>
+                      <p>Nota 1: Cada palabra clave debe ir en una línea y con punto y coma al final. <br />
+                      Lo mismo aplica para el campo <b>Keywords</b>. Ejemplos:</p>
+                      <p>Informatics; <br />
+                      Engineering;</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <textarea rows="8" class="form-control" name="palClaves" placeholder="Palabras Claves" required></textarea>
+                </div>
               </div>
               <div class="form-group">
-                <textarea rows="4" class="form-control" name="keywords" placeholder="Keywords" required></textarea>
+                <textarea rows="8" class="form-control" name="keywords" placeholder="Keywords" required></textarea>
               </div>
               <div class="form-group">
                 <textarea rows="4" class="form-control" name="agradecimientos" placeholder="Agradecimientos"></textarea>
               </div>
               <div class="form-group">
-                <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)
-* Referencia según la norma, termina con punto y coma y enter para ingresar una referencia.
-
-Ej: Objetivos de Desarrollo Sostenible. PNUD Colombia [En línea]
-Disponible: http://www.co.undp.org/content/colombia/es/home/sustainable-development-goals.html;" required></textarea>
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <p>Formato campo <b>Referencias</b>. Ejemplos:</p>
+                      <p>M. Nelles, J. Grünes, G. Morscheck G., “Waste Management in Germany – Development to a Sustainable Circular Economy?”, Procedia Environmental Sciences, vol. 35, 6-14, 2016, [En línea] Disponible: https://doi.org/10.1016/j.proenv.2016.07.001;</p>
+                      <p>Nota 1: Cada referencia debe ir en una línea y con punto y coma al final.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)" required></textarea>
+                </div>
               </div>
               <div class="form-group">
                 <input type="url" class="form-control" name="urlgaleradahtml" placeholder="URL galerada HTML y PDF">
@@ -94,5 +128,24 @@ Disponible: http://www.co.undp.org/content/colombia/es/home/sustainable-developm
         </div>
       </div>
     </div>
+    <!--
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-bdy">
+          <form action="">
+            <div class="form-group">
+              <h3 class="text-center">Ayuda</h3>
+            </div>
+            <div class="form-group">
+              <label>Ingrese el titulo en español</label>
+            </div>
+            <div class="form-group">
+              <label>Ingrese el titulo en inglés</label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    -->
   </div>
 </div>
