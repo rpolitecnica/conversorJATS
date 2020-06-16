@@ -33,7 +33,13 @@ router.get('/descargarxml/:idArtic', isLoggedIn, async (req, res) => {
 router.get('/urlgalerada/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const galeradaHTML = await pool.query('SELECT urlgaleradahtml FROM articulo WHERE idArtic = ?', [idArtic]);
-  res.redirect(galeradaHTML[0].urlgaleradahtml);
+  console.log(galeradaHTML[0].urlgaleradahtml);
+  if (galeradaHTML[0].urlgaleradahtml == 0) {
+    req.flash('message', 'No existe galerada HTML o PFD.');
+    res.redirect('/visualarticle/' + idArtic);
+  } else {
+    res.redirect(galeradaHTML[0].urlgaleradahtml);
+  }
 });
 
 module.exports = router;
