@@ -14,7 +14,11 @@
             </a>
             <!--<p class="m-2">{{description}}</p>-->
             <!--<p>Created {{timeago created_articulo}}</p>-->
-            <p>Edición: Año {{anyo}} - Volumen {{volumen}} - Numero {{numero}}</p>
+            <p>Edición: Año {{anyo}} - Volumen {{volumen}} - Numero {{numero}} <br />
+            {{#if username}}
+              Creado por: {{username}}
+            {{/if}}
+            </p>
             <a href="/links/delete/{{idArtic}}" class="btn btn-danger">Borrar</a>
             <a href="/links/edit/{{idArtic}}" class="btn btn-secondary">Editar</a>
           </div>

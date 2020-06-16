@@ -15,7 +15,11 @@
             <h5>
               <a href="/links/publicacion/{{idPublica}}">Año {{anyo}} - Volumen {{volumen}} - Numero {{numero}}</a>
             </h5>
-            <p>Total Artículos: {{total}}</p>
+            <p>Total Artículos: {{total}} <br />
+            {{#if username}}
+              Creada por: {{username}}
+            {{/if}}
+            </p>
             <a href="/links/editEdicion/{{idPublica}}" class="btn btn-secondary">Editar</a>
           </div>
         </div>

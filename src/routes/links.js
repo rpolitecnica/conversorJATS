@@ -7,14 +7,26 @@ const helpers = require('../lib/helpers');
 //Manejador de las Publicaciones
 router.get('/archives/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  //const links = await pool.query('SELECT * FROM publicacion WHERE usert_id = ? ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
-  const links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, count(idArtic) as total \
-  FROM publicacion \
-  LEFT OUTER JOIN articulo \
-  ON publicacion.idPublica=articulo.publicacion_id \
-  WHERE usert_id = ? \
-  GROUP BY idPublica \
-  ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  var links;
+  const tipoUser = await pool.query('SELECT tipousuario_id FROM usert WHERE id = ?', [id]);
+  if (tipoUser[0].tipousuario_id == 1) {//Es administrador
+    links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, username, count(idArtic) as total \
+    FROM publicacion \
+    LEFT OUTER JOIN articulo \
+    ON publicacion.idPublica=articulo.publicacion_id \
+    JOIN usert \
+    ON usert.id=publicacion.usert_id \
+    GROUP BY idPublica \
+    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  } else {
+    links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, count(idArtic) as total \
+    FROM publicacion \
+    LEFT OUTER JOIN articulo \
+    ON publicacion.idPublica=articulo.publicacion_id \
+    WHERE usert_id = ? \
+    GROUP BY idPublica \
+    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  }
   res.render('links/archives', { links, id: id });
 });
 
@@ -173,11 +185,23 @@ router.post('/publication/:id', isLoggedIn, async (req, res) => {
 //GET Router para listar todos los articulos del usuario
 router.get('/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  const links = await pool.query('SELECT * FROM articulo JOIN publicacion \
-  ON publicacion.idPublica=articulo.publicacion_id \
-  WHERE publicacion.idPublica \
-  IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) \
-  ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  var links;
+  const tipoUser = await pool.query('SELECT tipousuario_id FROM usert WHERE id = ?', [id]);
+  if (tipoUser[0].tipousuario_id == 1) {//Es administrador
+    links = await pool.query('SELECT * FROM articulo JOIN publicacion \
+    ON publicacion.idPublica=articulo.publicacion_id \
+    JOIN usert \
+    ON usert.id=publicacion.usert_id \
+    WHERE publicacion.idPublica \
+    IN (SELECT idPublica FROM publicacion) \
+    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  } else {
+    links = await pool.query('SELECT * FROM articulo JOIN publicacion \
+    ON publicacion.idPublica=articulo.publicacion_id \
+    WHERE publicacion.idPublica \
+    IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) \
+    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+  }
   res.render('links/list', { links, id: id });
 });
 
