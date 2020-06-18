@@ -297,6 +297,7 @@ router.get('/delete/:idArtic', isLoggedIn, async (req, res) => {
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
   await pool.query('DELETE FROM articulo WHERE idArtic = ?', [idArtic]);
   req.flash('success', 'Articulo eliminado');
+  console.log(req.user.id);
   res.redirect('/links/' + usert_id[0].usert_id); //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
 });
 
