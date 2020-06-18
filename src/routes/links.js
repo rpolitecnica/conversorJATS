@@ -175,9 +175,9 @@ router.post('/publication/:id', isLoggedIn, async (req, res) => {
       usert_id: id
     };
     await pool.query('INSERT INTO publicacion set ?', [newpublication]);
-    req.flash('success', 'Publicación creada!');
+    req.flash('success', 'Edición creada!');
   } else {
-    req.flash('message', 'Publicación ya existe.');
+    req.flash('message', 'Edición ya existe.');
   }
   res.redirect('/links/archives/'+ id);
 });

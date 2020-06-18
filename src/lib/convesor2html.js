@@ -6,14 +6,16 @@ const procesador = require('xslt-processor');
 
 convert.xml2html = (xml) => {
 
-  const contxml = fs.readFileSync(xml).toString();
-  const outXmlString = procesador.xsltProcess(
-    procesador.xmlParse(contxml).documentElement,
-    procesador.xmlParse(xsl)
-  );
-
-  return outXmlString;
-
+  try {
+    const contxml = fs.readFileSync(xml).toString();
+    const outXmlString = procesador.xsltProcess(
+      procesador.xmlParse(contxml).documentElement,
+      procesador.xmlParse(xsl)
+    );
+    return outXmlString;
+  } catch (error) {
+    return 'Error';
+  }
 };
 
 module.exports = convert;

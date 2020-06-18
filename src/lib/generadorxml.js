@@ -25,28 +25,32 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
   var todosAutores = [];
   var emailAutores = [];
   for (var i = 0; i < totAutores[0].autorES; i++) {
-    todosAutores[i] = {
-      'contrib': {
-        '@contrib-type': 'author',
-        'name': {
-          'surname': autoresData[0][i].author.toString().match(/^([^,]+)/)[0],
-          'given-names': autoresData[0][i].author.toString().match(/, ([^(.|;)]+)/)[1]
-        },
-        'xref': {
-          '@ref-type': 'aff',
-          '@rid': 'aff1',
-          'sup': '1'
+    try {
+      todosAutores[i] = {
+        'contrib': {
+          '@contrib-type': 'author',
+          'name': {
+            'surname': autoresData[0][i].author.toString().match(/^([^,]+)/)[0],
+            'given-names': autoresData[0][i].author.toString().match(/, ([^(.|;)]+)/)[1]
+          },
+          'xref': {
+            '@ref-type': 'aff',
+            '@rid': 'aff1',
+            'sup': '1'
+          }
         }
       }
-    }
-    if (autoresData[0][i].author.toString().match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/) != null) {
-      emailAutores[i] = {
-        'email': autoresData[0][i].author.toString().match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/)[0]
+      if (autoresData[0][i].author.toString().match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/) != null) {
+        emailAutores[i] = {
+          'email': autoresData[0][i].author.toString().match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/)[0]
+        }
+      } else {
+        emailAutores[i] = {
+          'email': ''
+        }
       }
-    } else {
-      emailAutores[i] = {
-        'email': ''
-      }
+    } catch (error) {
+      return 'Error';
     }
   };
 
@@ -54,30 +58,42 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
   //Se recuperan las palabras claves y se separan para insertarlos en el XML
   var todasPalClaves = [];
   for (var i = 0; i < totPalaClaves[0].palabClaves; i++) {
-    todasPalClaves[i] = {
-      'kwd': palabClavesData[0][i].palclave.toString().match(/([^;]+)/)[0]
+    try {
+      todasPalClaves[i] = {
+        'kwd': palabClavesData[0][i].palclave.toString().match(/([^;]+)/)[0]
+      }
+    } catch (error) {
+      return 'Error';
     }
   };
 
   //Se recuperan las keywords y se separan para insertarlos en el XML
   var todasKeyWords = [];
   for (var i = 0; i < totKeyw[0].keyWord; i++) {
-    todasKeyWords[i] = {
-      'kwd': keywordsData[0][i].keyword.toString().match(/([^;]+)/)[0]
+    try {
+      todasKeyWords[i] = {
+        'kwd': keywordsData[0][i].keyword.toString().match(/([^;]+)/)[0]
+      }
+    } catch (error) {
+      return 'Error';
     }
   };
 
   //Se recuperan las referencias y se separan para insertarlos en el XML
   var todosReferencias = [];
   for (var i = 0; i < totReferencias[0].num_ref_lines; i++) {
-    var aux = referenciaData[0][i].refes.toString().match(/(.*)\b([^\r])/)[0];
-    var interObj = aux.replace(/[;]$/, '');
-    todosReferencias[i] = {
-      'ref': {
+    try {
+      var aux = referenciaData[0][i].refes.toString().match(/(.*)\b([^\r])/)[0];
+      var interObj = aux.replace(/[;]$/, '');
+      todosReferencias[i] = {
+        'ref': {
         '@id': 'R'+(i+1),
         'label': '[' + (i+1)+ ']',
         'mixed-citation': interObj//match(/(.*)([^;][^\r])/)[0] OR match(/(.*)([^\r])/)[0]
+        }
       }
+    } catch (error) {
+      return 'Error';
     }
   };
 

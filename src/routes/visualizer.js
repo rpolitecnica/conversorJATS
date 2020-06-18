@@ -13,21 +13,30 @@ router.get('/visualarticle/:idArtic', isLoggedIn, async (req, res) => {
   const xml = dirPath + 'articleId' + idArtic + '.xml';
 
   //Crear archivo XML
-  await creadorXML.crearArchivoXML(idArtic);
+  const archivoxml = await creadorXML.crearArchivoXML(idArtic);
 
   //Convertir XML con XSL a HTML
   const htmlFormato = convert.xml2html(xml);
 
   //const doc = DOMParser().parseFromString(htmlFormato, 'text/html');
   //console.log(doc);
-
-  res.render('links/verarticulo', { link: htmlFormato, idArtic: idArtic});
+  if (archivoxml == 'Error' || htmlFormato == 'Error') {
+    req.flash('message', 'Validar el formato en los datos del artículo.');
+    res.redirect('/links/edit/' + idArtic);
+  } else {
+    res.render('links/verarticulo', { link: htmlFormato, idArtic: idArtic });
+  }
 });
 
 router.get('/descargarxml/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
-  await creadorXML.crearArchivoXML(idArtic);
-  res.download(dirPath + 'articleId' + idArtic + '.xml');
+  const archivoxml = await creadorXML.crearArchivoXML(idArtic);
+  if (archivoxml == 'Error') {
+    req.flash('message', 'Validar el formato en los datos del artículo.');
+    res.redirect('/links/edit/' + idArtic);
+  } else {
+    res.download(dirPath + 'articleId' + idArtic + '.xml');
+  }
 });
 
 router.get('/urlgalerada/:idArtic', isLoggedIn, async (req, res) => {

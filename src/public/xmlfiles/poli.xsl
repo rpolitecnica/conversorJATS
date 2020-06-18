@@ -50,13 +50,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</p>
     </xsl:for-each>
 
+	<p>DOI: 
 	<xsl:element name="a">
 		<xsl:attribute name="href">
 			<xsl:value-of select="front/article-meta/article-id"/>
 		</xsl:attribute>
 			<xsl:value-of select="front/article-meta/article-id"/>
 	</xsl:element>
-
+</p>
 	</body>
   </html>
 </xsl:template>
