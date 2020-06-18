@@ -6,7 +6,7 @@ const helpers = require('../lib/helpers');
 
 //Manejador de las Publicaciones
 router.get('/archives/:id', isLoggedIn, async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; //Id del usuario
   var links;
   const tipoUser = await pool.query('SELECT tipousuario_id FROM usert WHERE id = ?', [id]);
   if (tipoUser[0].tipousuario_id == 1) {//Es administrador
@@ -17,7 +17,8 @@ router.get('/archives/:id', isLoggedIn, async (req, res) => {
     JOIN usert \
     ON usert.id=publicacion.usert_id \
     GROUP BY idPublica \
-    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+    ORDER BY anyo DESC, volumen DESC, numero DESC');
+    res.render('links/archives', { links, tipoUser: tipoUser });
   } else {
     links = await pool.query('SELECT idPublica, anyo, volumen, numero, usert_id, count(idArtic) as total \
     FROM publicacion \
@@ -26,21 +27,30 @@ router.get('/archives/:id', isLoggedIn, async (req, res) => {
     WHERE usert_id = ? \
     GROUP BY idPublica \
     ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+    res.render('links/archives', { links, idUsuario: req.user.id });
   }
-  res.render('links/archives', { links, id: id });
+  //res.render('links/archives', { links, id: id });
 });
 
 
 //Manejador de los articulos segun la publicacion
 router.get('/publicacion/:idPublica', isLoggedIn, async (req, res) => {
   const { idPublica } = req.params;
+  const tipoUser = await pool.query('SELECT tipousuario_id \
+  FROM usert \
+  WHERE id = ?', [req.user.id]);
+
   const links = await pool.query('SELECT titulo, pagInicial, pagFinal, idArtic, autores \
    FROM articulo \
    JOIN publicacion ON \
    publicacion.idPublica=articulo.publicacion_id \
    WHERE publicacion.idPublica = ? \
    ORDER BY pagInicial ASC', [idPublica]);
-   res.render('links/articles', { links });
+  if (tipoUser[0].tipousuario_id == 1) {
+    res.render('links/articles', { links, tipoUser: tipoUser, idUsuario: req.user.id });
+  } else {
+    res.render('links/articles', { links, idUsuario: req.user.id });
+  }
  });
 
 
@@ -186,7 +196,7 @@ router.post('/publication/:id', isLoggedIn, async (req, res) => {
 router.get('/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   var links;
-  const tipoUser = await pool.query('SELECT tipousuario_id FROM usert WHERE id = ?', [id]);
+  const tipoUser = await pool.query('SELECT tipousuario_id FROM usert WHERE id = ?', [req.user.id]);
   if (tipoUser[0].tipousuario_id == 1) {//Es administrador
     links = await pool.query('SELECT * FROM articulo JOIN publicacion \
     ON publicacion.idPublica=articulo.publicacion_id \
@@ -194,15 +204,17 @@ router.get('/:id', isLoggedIn, async (req, res) => {
     ON usert.id=publicacion.usert_id \
     WHERE publicacion.idPublica \
     IN (SELECT idPublica FROM publicacion) \
-    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+    ORDER BY anyo DESC, volumen DESC, numero DESC');
+    res.render('links/list', { links, tipoUser: tipoUser });
   } else {
     links = await pool.query('SELECT * FROM articulo JOIN publicacion \
     ON publicacion.idPublica=articulo.publicacion_id \
     WHERE publicacion.idPublica \
     IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) \
     ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+    res.render('links/list', { links, idUsuario: req.user.id });
   }
-  res.render('links/list', { links, id: id });
+  //res.render('links/list', { links, id: id });
 });
 
 
@@ -297,8 +309,7 @@ router.get('/delete/:idArtic', isLoggedIn, async (req, res) => {
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
   await pool.query('DELETE FROM articulo WHERE idArtic = ?', [idArtic]);
   req.flash('success', 'Articulo eliminado');
-  console.log(req.user.id);
-  res.redirect('/links/' + usert_id[0].usert_id); //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
+  res.redirect('/links/' + req.user.id); //Accede al router de /:id para consultar de nuevo los articulos que quedan y presentarlos.
 });
 
 //GET Router para editar el articulo

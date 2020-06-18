@@ -7,6 +7,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         {{#if user}}
+          <li class="nav-item">
+            <a href="/profile" class="nav-link">{{user.fullname}}</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Accesos
@@ -14,18 +17,12 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="/links/add/{{user.id}}">Nuevo Articulo</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/links/{{user.id}}">Ver Articulos</a>
+              <a class="dropdown-item" href="/links/{{user.id}}">Mis Articulos</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/links/publication/{{user.id}}">Nueva Edición</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/links/archives/{{user.id}}">Ver Ediciones</a>
+              <a class="dropdown-item" href="/links/archives/{{user.id}}">Mis Ediciones</a>
             </div>
-          </li>
-          <!--<li class="nav-item">
-            <a href="/links/archives/{{user.id}}" class="nav-link">Publicaciones</a>
-          </li>-->
-          <li class="nav-item">
-            <a href="/profile" class="nav-link">Mi Perfil</a>
           </li>
           <li class="nav-item">
             <a href="/logout" class="nav-link">Salir</a>

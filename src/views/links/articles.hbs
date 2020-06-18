@@ -2,6 +2,10 @@
   <div class="text-dark text-center p-4">
     <h3>ARTÍCULOS</h3>
   </div>
+  <div class="card text-center h-100">
+    <a href="/links/archives/{{idUsuario}}">Volver</a>
+  </div>
+  <br />
   <div class="row">
     {{#each links}}
       <div class="col-sm-4 col-md-6 col-lg-4">
@@ -20,7 +24,11 @@
       <div class="col-md-4 mx-auto">
         <div class="card card-body text-center">
           <p>No hay artículos creados</p>
-          <a href="/profile">Mi Perfil</a>
+          {{#if tipoUser}}
+            <!--<a href="/links/archives/{{idUsuario}}">Volver</a>-->
+          {{else}}
+            <a href="/links/add/{{idUsuario}}">Crear artículo</a>
+          {{/if}}
         </div>
       </div>
     {{/each}}

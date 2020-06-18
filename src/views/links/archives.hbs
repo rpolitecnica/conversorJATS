@@ -2,11 +2,10 @@
   <div class="text-dark text-center p-4">
     <h3>EDICIONES</h3>
   </div>
-  <div class="card text-center">
-    <div class="card-body">
-      <a href="/links/add/{{id}}" class="btn btn-success">Nuevo artículo</a>
-    </div>
+  <div class="card text-center h-100">
+    <a href="/profile">Volver</a>
   </div>
+  <br />
   <div class="row">
     {{#each links}}
       <div class="col-sm-4 col-md-6 col-lg-4">
@@ -28,7 +27,11 @@
       <div class="col-md-4 mx-auto">
         <div class="card card-body text-center">
           <p>No hay ediciones creadas</p>
-          <a href="/profile">Mi Perfil</a>
+          {{#if tipoUser}}
+            <a href="/profile">Home</a>
+          {{else}}
+            <a href="/links/publication/{{idUsuario}}">Crear edición</a>
+          {{/if}}
         </div>
       </div>
     {{/each}}
