@@ -133,6 +133,9 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
           .ele(todosAutores).up()//Imprime todos los autores
         .up()
         .com('AFILIACIONES')
+		.ele('aff', {'id': 'aff1'})
+			.ele('label', '1').up()
+		.up()
         .ele('author-notes')
           .ele('corresp')
             .ele('label', 'Correspondencia | Correspondence').up()
@@ -166,7 +169,7 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
           .ele(todasPalClaves).up()//Imprime todas las palabras claves
         .up()
         .ele('counts')
-          .ele('fig-count', {'count': ''}).up()
+          .ele('fig-count', {'count': '5'}).up()
           .ele('ref-count', {'count': totReferencias[0].num_ref_lines.toString()}).up()
           .ele('page-count', {'count': (allData[0].pagFinal - allData[0].pagInicial + 1).toString()}).up()
         .up()
@@ -195,7 +198,9 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
       .att('xml:lang', 'en')
       .ele('front-stub')
         .ele('article-categories')
-          .ele('subj-group', {'subj-group-type': 'content'}).up()
+          .ele('subj-group', {'subj-group-type': 'content'})
+			.ele('subject', 'Paper').up()
+		  .up()
         .up()
         .ele('title-group')
           .ele('article-title', {'xml:lang': 'en'}, allData[0].title).up()
@@ -211,7 +216,6 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
         .ele('p', 'Not in english').up()
       .up()
       .ele('back')
-      .ele('p', 'No back').up()
       .up()
     .up()
     .end({ pretty: true });
