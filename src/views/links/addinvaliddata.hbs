@@ -3,38 +3,47 @@
     <div class="col-sm-12 col-md-8 col-lg-7 mx-auto">
       <div class="card">
         <div class="card-body">
-          <form action="/links/edit/{{link.idArtic}}" method="POST">
+          <h6 style="text-align: center; color: red;">Las fecha de recibido debe ser anterior a la de aceptación</h6>
+          <h6 style="text-align: center; color: red;">Las fecha de aceptación debe ser anterior a la de publicación</h6>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form action="/links/add/{{id}}" method="POST">
               <div class="form-group">
-                <h3 class="text-center">Editar Artículo</h3>
+                <h3 class="text-center">Registro Artículo</h3>
               </div>
               <div class="form-group">
-                <label for="titulo">Titulo</label>
                 <input type="text" value="{{link.titulo}}" class="form-control" name="titulo" placeholder="Título" autofocus required>
               </div>
               <div class="form-group">
-                <label for="title">Title</label>
                 <input type="text" value="{{link.title}}" class="form-control" name="title" placeholder="Title" required>
               </div>
+              <div class="form-group">
+                <input type="text" value="{{link.publicacion_id}}" class="form-control" name="edicion" placeholder="Edicion" readonly>
+              </div>
               <!--
               <div class="form-group">
-                <label for="numArticulo" style="display: none;">Número Artículo</label>
-                <input type="number" style="display: none;" value="{{link.numArticulo}}" class="form-control" name="numArticulo" min="1" placeholder="Número Artículo" required>
+                <label for="edicion">Seleccione la edición  </label>
+                <select name="edicion" required>
+                  {{#each ediciones}}
+                    <option value={{idPublica}}>Año: {{anyo}} - Volumen: {{volumen}} - Número: {{numero}}</option>
+                  {{/each}}
+                </select>
               </div>
               -->
               <div class="form-group">
-                <label for="roi">URL DOI</label>
+                <input type="number" value="{{link.numArticulo}}" class="form-control" name="numArticulo" min="1" placeholder="Número Artículo" required>
+              </div>
+              <div class="form-group">
                 <input type="url" value="{{link.doi}}" class="form-control" name="doi" placeholder="URL DOI">
               </div>
-              <!--
               <div class="form-group">
-                <label for="pagInicial" style="display: none;">Página Inicial</label>
-                <input type="number" style="display: none;" value="{{link.pagInicial}}" class="form-control" name="pagInicial" min="1" placeholder="Página inicial" required>
+                <input type="number" value="{{link.pagInicial}}" class="form-control" name="pagInicial" min="1" placeholder="Página inicial" required>
               </div>
               <div class="form-group">
-                <label for="pagFinal" style="display: none;">Página Final</label>
-                <input type="number" style="display: none;" value="{{link.pagFinal}}" class="form-control" name="pagFinal" min="1" placeholder="Página final" required>
+                <input type="number" value="{{link.pagFinal}}" class="form-control" name="pagFinal" min="1" placeholder="Página final" required>
               </div>
-              -->
               <div class="form-group">
                 <div class="card">
                   <div class="card-body">
@@ -47,34 +56,29 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="autores">Autor(es)</label>
-                  <textarea rows="8" class="form-control" name="autores" placeholder="Autor(es)." required>{{link.autores}}</textarea>
+                <div class="form-group input-group">
+                  <textarea rows="8" class="form-control" name="autores" placeholder="Autor(es)" required>{{link.autores}}</textarea>
                 </div>
               </div>
               <div class="form-group">
                 <input type="email" value="{{link.correspondencia}}" class="form-control" name="correspondencia" pattern="^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" placeholder="Email correspondencia" required>
               </div>
-              <!--
               <div class="form-group input-group-append">
-                <label for="fecRecibido" style="display: none;">Fecha recibido</label>
-                <input type="date" style="display: none;" class="form-control" name="fecRecibido" required>
+                <label for="fecRecibido">Fecha recibido</label>
+                <input type="date" value="{{link.fecRecibido}}" class="form-control" name="fecRecibido" required>
               </div>
               <div class="form-group input-group-append">
-                <label for="fecAceptado" style="display: none;">Fecha aceptado</label>
-                <input type="date" style="display: none;" class="form-control" name="fecAceptado" required>
+                <label for="fecAceptado">Fecha aceptado</label>
+                <input type="date" value="{{link.fecAceptado}}" class="form-control" name="fecAceptado" required>
               </div>
               <div class="form-group input-group-append">
-                <label for="fecPublicacion" style="display: none;">Fecha publicación</label>
-                <input type="date" style="display: none;" class="form-control" name="fecPublicacion" required>
+                <label for="fecPublicacion">Fecha publicación</label>
+                <input type="date" value="{{link.fecPublicacion}}" class="form-control" name="fecPublicacion" required>
               </div>
-              -->
               <div class="form-group">
-                <label for="resumen">Resumen</label>
                 <textarea rows="10" class="form-control" name="resumen" placeholder="Resumen" required>{{link.resumen}}</textarea>
               </div>
               <div class="form-group">
-                <label for="abstract">Abstract</label>
                 <textarea rows="10" class="form-control" name="abstract" placeholder="Abstract" required>{{link.abstract}}</textarea>
               </div>
               <div class="form-group">
@@ -89,7 +93,6 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="palClaves">Palabras Claves</label>
                   <textarea rows="8" class="form-control" name="palClaves" placeholder="Palabras Claves" required>{{link.palClaves}}</textarea>
                 </div>
               </div>
@@ -97,20 +100,18 @@
                 <div class="card">
                   <div class="card-body">
                     <div>
-                      <p><b>AYUDA </b> Formato campo <b>Keywords</b>. <br />
-                        </p>
-                      <p> Ejemplo -> <br />
-                       Supply chain, vegetables, horticulturist, robustness.</p>
+                      <p><b>AYUDA </b >Formato campo <b>Keywords</b>. <br />
+                       </p>
+                      <p> Ejemplos -> <br />
+                        Supply chain, vegetables, horticulturist, robustness.</p>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="keywords">Keywords</label>
                   <textarea rows="8" class="form-control" name="keywords" placeholder="Keywords" required>{{link.keywords}}</textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label for="agradecimientos">Agradecimientos</label>
                 <textarea rows="4" class="form-control" name="agradecimientos" placeholder="Agradecimientos">{{link.agradecimientos}}</textarea>
               </div>
               <div class="form-group">
@@ -118,20 +119,20 @@
                   <!--
                   <div class="card-body">
                     <div>
-                      <p>Formato campo <b>Referencias</b>. Ejemplos:</p>
-                      <p>M. Nelles, J. Grünes, G. Morscheck G., “Waste Management in Germany – Development to a Sustainable Circular Economy?”, Procedia Environmental Sciences, vol. 35, 6-14, 2016, [En línea] Disponible: https://doi.org/10.1016/j.proenv.2016.07.001;</p>
-                      <p>Nota 1: Cada referencia debe ir en una línea y con punto y coma al final.</p>
+                      <p><b>AYUDA </b >Formato campo <b>Referencia(s)</b>. <br />
+                        Cada referencia debe ir en una línea y con un punto y coma al final (;)</p>
+                      <p>Ejemplo -> <br />
+                        M. Nelles, J. Grünes, G. Morscheck G., “Waste Management in Germany – Development to a Sustainable Circular Economy?”, Procedia Environmental Sciences, vol. 35, 6-14, 2016, [En línea] Disponible: https://doi.org/10.1016/j.proenv.2016.07.001;
+                      </p>
                     </div>
                   </div>
                   -->
                 </div>
                 <div class="form-group">
-                  <label for="referencias">Referencia(s)</label>
                   <textarea rows="10" class="form-control" name="referencias" placeholder="Referencia(s)" required>{{link.referencias}}</textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label for="galeradahtml">URL galerada HTML y PDF</label>
                 <input type="url" value="{{link.urlgaleradahtml}}" class="form-control" name="urlgaleradahtml" placeholder="URL galerada HTML o PDF">
               </div>
               <div class="form-group">

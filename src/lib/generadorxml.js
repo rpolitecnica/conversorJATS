@@ -8,7 +8,7 @@ const creadorXML = {};
 creadorXML.crearArchivoXML =  async (idArtic) => {
 
   //const { idArtic } = req.params;
-  const allData = await pool.query('SELECT titulo, title, numArticulo, pagInicial, pagFinal, fecRecibido, fecAceptado, fecPublicacion, resumen, abstract, agradecimientos, doi, urlgaleradahtml, publicacion_id FROM articulo WHERE idArtic = ?', [idArtic]);
+  const allData = await pool.query('SELECT titulo, title, numArticulo, pagInicial, pagFinal, fecRecibido, fecAceptado, fecPublicacion, resumen, abstract, agradecimientos, correspondencia, doi, urlgaleradahtml, publicacion_id FROM articulo WHERE idArtic = ?', [idArtic]);
   const publicaInfo = await pool.query('SELECT volumen, numero FROM publicacion where idPublica = ?', [allData[0].publicacion_id]);
 
   const totAutores = await pool.query('SELECT @num_ref_lines  := 1 + length(autores) - length(replace(autores, "\n", "")) as autorES FROM articulo WHERE idArtic = ?', [idArtic]);
@@ -139,7 +139,7 @@ creadorXML.crearArchivoXML =  async (idArtic) => {
         .ele('author-notes')
           .ele('corresp')
             .ele('label', 'Correspondencia | Correspondence').up()
-            .ele(emailAutores).up()
+            .ele('email', allData[0].correspondencia).up()
           .up()
         .up()
         .ele('pub-date', { 'pub-type': 'epub-ppub' })

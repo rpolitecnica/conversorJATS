@@ -100,7 +100,7 @@ router.get('/add/:id', isLoggedIn, async (req, res) => {
 router.post('/add/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params
   var { titulo, title, edicion, numArticulo, doi, pagInicial, pagFinal,
-    autores, fecRecibido, fecAceptado, fecPublicacion, resumen,
+    autores, correspondencia, fecRecibido, fecAceptado, fecPublicacion, resumen,
     abstract, palClaves, keywords, agradecimientos, referencias, urlgaleradahtml } = req.body;
 
   const valoresArticulo = await pool.query('SELECT articulo.idArtic, articulo.numArticulo, articulo.pagInicial, articulo.pagFinal FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE publicacion.idPublica = ?', [edicion]);
@@ -108,110 +108,146 @@ router.post('/add/:id', isLoggedIn, async (req, res) => {
   var noExisteNumArticulo = false;
   var rangoPaginas = [];
 
-  //Parsea las referencias para ingresarlas a la base de datos.
-  const str = referencias.match(/(^.*).$/gm)
-  var referenciaModificado = '';
-  for (let index = 0; index < str.length; index++) {
-    if (index == str.length - 1) {
-      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';');
-    } else {
-      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';\n');
-    }
+
+  const correctData = {
+    titulo,
+    title,
+    numArticulo,
+    pagInicial,
+    pagFinal,
+    autores,
+    fecRecibido,
+    fecAceptado,
+    fecPublicacion,
+    resumen,
+    abstract,
+    palClaves,
+    keywords,
+    agradecimientos,
+    referencias,
+    correspondencia,
+    doi,
+    urlgaleradahtml,
+    publicacion_id: edicion
   }
-  referencias = referenciaModificado;
 
-  //Parsea las palabrras claves para ingresarlas a la base de datos.
-  var palabrasClaves = '';
-  palabrasClaves = palClaves.replace(/(, |; |\. |.$)/gm, ';\n');
-  palabrasClaves = palabrasClaves.replace(/\n\B/gm, '');
-  palClaves = palabrasClaves;
 
-  //Parsea las keywords para ingresarlas a la base de datos.
-  var keywordsModificado = '';
-  keywordsModificado = keywords.replace(/(, |; |\. |.$)/gm, ';\n');
-  keywordsModificado = keywordsModificado.replace(/\n\B/gm, '');
-  keywords = keywordsModificado;
+  console.log(fecRecibido);
+  console.log(fecAceptado);
+  console.log(fecPublicacion);
 
-  //Parsea los autores para ingresarlas a la base de datos.
-  var paraAutores = autores.replace(/, |$/gm, '\n');
-  paraAutores = paraAutores.replace(/\n\B/gm, '');
-  var verAutores = paraAutores.match(/(^.*)/gm);
-
-  var elemento = '';
-  var apellidos = '';
-  var nombres = '';
-  var nombreCompleto = '';
-  for (let index = 0; index < verAutores.length; index++) {
-    elemento = verAutores[index].match(/[^ ]\S*/gm)
-    apellidos = elemento[elemento.length - 2] + ' ' + elemento[elemento.length - 1] + ',';
-    if (elemento.length - 2 == 1) {
-      nombres = elemento[0];
-    } else {
-      nombres = elemento[0] + ' ' + elemento[1];;
-    }
-    nombreCompleto = nombreCompleto + apellidos + ' ' + nombres + ';\n';
-  }
-  nombreCompleto = nombreCompleto.replace(/\n\B/gm, '');
-  autores = nombreCompleto;
-  //res.redirect('/links/' + id);
-
-  if (valoresArticulo.length == 0) {
-    noExisteNumArticulo = true;
+  if (fecRecibido > fecAceptado || fecAceptado > fecPublicacion) {
+    console.log('Fechas inválidas');
+    res.render('links/addinvaliddata', { link: correctData, id: id });
   } else {
-    for (var key = 0; key < valoresArticulo.length; key++) {
-      var row = valoresArticulo[key];
-      if ( numArticulo == row.numArticulo) {
-        noExisteNumArticulo = false;
-        break;
+    console.log('Fechas validas');
+    //res.redirect('/links/' + id);
+
+    //Parsea las referencias para ingresarlas a la base de datos.
+    const str = referencias.match(/(^.*).$/gm)
+    var referenciaModificado = '';
+    for (let index = 0; index < str.length; index++) {
+      if (index == str.length - 1) {
+        referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';');
       } else {
-        noExisteNumArticulo = true;
-      }
-      if ((pagInicial < row.pagInicial || row.pagInicial < pagFinal) && (pagInicial < row.pagFinal || row.pagFinal < pagFinal) && (row.pagInicial < pagInicial || row.pagFinal > pagFinal) ){//(pagInicial < row.pagInicial || pagInicial > row.pagFinal) && (pagFinal < row.pagInicial || pagFinal > row.pagFinal)) {
-        rangoPaginas[key] = true;
-      } else {
-        rangoPaginas[key] = false;
+        referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';\n');
       }
     }
-  }
+    referencias = referenciaModificado;
 
-  rangoValido = (rangoPaginas.includes(false));
-  console.log(rangoPaginas);
-  console.log(rangoValido);
+    //Parsea las palabrras claves para ingresarlas a la base de datos.
+    var palabrasClaves = '';
+    palabrasClaves = palClaves.replace(/(, |; |\. |.$)/gm, ';\n');
+    palabrasClaves = palabrasClaves.replace(/\n\B/gm, '');
+    palClaves = palabrasClaves;
 
-  if (noExisteNumArticulo && !rangoValido) {
-    const newlink = {
-      titulo,
-      title,
-      numArticulo,
-      pagInicial,
-      pagFinal,
-      autores,
-      fecRecibido,
-      fecAceptado,
-      fecPublicacion,
-      resumen,
-      abstract,
-      palClaves,
-      keywords,
-      agradecimientos,
-      referencias,
-      doi,
-      urlgaleradahtml,
-      publicacion_id: edicion
-    };
-    await pool.query('INSERT INTO articulo set ?', [newlink]);
-    req.flash('success', 'Articulo guardado');
-    res.redirect('/links/' + id);
-  }
-  if (!noExisteNumArticulo) {
-    req.flash('message', 'El numero del artículo ya existe en la edición: ' + edicion);
-    res.redirect('/profile');
-  }
-  if (rangoValido) {
-    req.flash('message', 'El numero de pagina inicial y/o final ya pertenece a otro articulo ');
-    res.redirect('/profile');
-  }
+    //Parsea las keywords para ingresarlas a la base de datos.
+    var keywordsModificado = '';
+    keywordsModificado = keywords.replace(/(, |; |\. |.$)/gm, ';\n');
+    keywordsModificado = keywordsModificado.replace(/\n\B/gm, '');
+    keywords = keywordsModificado;
 
+    //Parsea los autores para ingresarlas a la base de datos.
+    var paraAutores = autores.replace(/, |$/gm, '\n');
+    paraAutores = paraAutores.replace(/\n\B/gm, '');
+    var verAutores = paraAutores.match(/(^.*)/gm);
+
+    var elemento = '';
+    var apellidos = '';
+    var nombres = '';
+    var nombreCompleto = '';
+    for (let index = 0; index < verAutores.length; index++) {
+      elemento = verAutores[index].match(/[^ ]\S*/gm)
+      apellidos = elemento[elemento.length - 2] + ' ' + elemento[elemento.length - 1] + ',';
+      if (elemento.length - 2 == 1) {
+        nombres = elemento[0];
+      } else {
+        nombres = elemento[0] + ' ' + elemento[1];;
+      }
+      nombreCompleto = nombreCompleto + apellidos + ' ' + nombres + ';\n';
+    }
+    nombreCompleto = nombreCompleto.replace(/\n\B/gm, '');
+    autores = nombreCompleto;
+    //res.redirect('/links/' + id);
+
+    if (valoresArticulo.length == 0) {
+      noExisteNumArticulo = true;
+    } else {
+      for (var key = 0; key < valoresArticulo.length; key++) {
+        var row = valoresArticulo[key];
+        if ( numArticulo == row.numArticulo) {
+          noExisteNumArticulo = false;
+          break;
+        } else {
+          noExisteNumArticulo = true;
+        }
+        if ((pagInicial < row.pagInicial || row.pagInicial < pagFinal) && (pagInicial < row.pagFinal || row.pagFinal < pagFinal) && (row.pagInicial < pagInicial || row.pagFinal > pagFinal) ){//(pagInicial < row.pagInicial || pagInicial > row.pagFinal) && (pagFinal < row.pagInicial || pagFinal > row.pagFinal)) {
+          rangoPaginas[key] = true;
+        } else {
+          rangoPaginas[key] = false;
+        }
+      }
+    }
+
+    rangoValido = (rangoPaginas.includes(false));
+    console.log(rangoPaginas);
+    console.log(rangoValido);
+
+    if (noExisteNumArticulo && !rangoValido) {
+      const newlink = {
+        titulo,
+        title,
+        numArticulo,
+        pagInicial,
+        pagFinal,
+        autores,
+        fecRecibido,
+        fecAceptado,
+        fecPublicacion,
+        resumen,
+        abstract,
+        palClaves,
+        keywords,
+        agradecimientos,
+        referencias,
+        correspondencia,
+        doi,
+        urlgaleradahtml,
+        publicacion_id: edicion
+      };
+      await pool.query('INSERT INTO articulo set ?', [newlink]);
+      req.flash('success', 'Articulo guardado');
+      res.redirect('/links/' + id);
+    }
+    if (!noExisteNumArticulo) {
+      req.flash('message', 'El numero del artículo ya existe en la edición: ' + edicion);
+      res.redirect('/profile');
+    }
+    if (rangoValido) {
+      req.flash('message', 'El numero de pagina inicial y/o final ya pertenece a otro articulo ');
+      res.redirect('/profile');
+    }
+  }
 });
 
 //GET Router de formulario para crear Edicion
@@ -370,7 +406,7 @@ router.get('/edit/:idArtic', isLoggedIn, async (req, res) => {
 //POST Router para guardar el articulo editado
 router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite editar el numero de publicación
   const { idArtic } = req.params;
-  var { titulo, title, doi, autores, resumen, abstract, palClaves, keywords,
+  var { titulo, title, doi, autores, correspondencia, resumen, abstract, palClaves, keywords,
     agradecimientos, referencias, urlgaleradahtml } = req.body;
 
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
@@ -400,28 +436,6 @@ router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite e
   keywordsModificado = keywordsModificado.replace(/\n\B/gm,'');
   keywords = keywordsModificado;
 
-  //Parsea los autores para ingresarlas a la base de datos.
-  var paraAutores = autores.replace(/, |$/gm, '\n');
-  paraAutores = paraAutores.replace(/\n\B/gm, '');
-  var verAutores = paraAutores.match(/(^.*)/gm);
-
-  var elemento = '';
-  var apellidos = '';
-  var nombres = '';
-  var nombreCompleto = '';
-  for (let index = 0; index < verAutores.length; index++) {
-    elemento = verAutores[index].match(/[^ ]\S*/gm)
-    apellidos = elemento[elemento.length - 2] + ' ' + elemento[elemento.length - 1] + ',';
-    if (elemento.length - 2 == 1) {
-      nombres = elemento[0];
-    } else {
-      nombres = elemento[0] + ' ' + elemento[1];;
-    }
-    nombreCompleto = nombreCompleto + apellidos + ' ' + nombres + ';\n';
-  }
-  nombreCompleto = nombreCompleto.replace(/\n\B/gm, '');
-  autores = nombreCompleto;
-
   const editLink = {
     titulo,
     title,
@@ -433,6 +447,7 @@ router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite e
     keywords,
     agradecimientos,
     referencias,
+    correspondencia,
     urlgaleradahtml
   };
   await pool.query('UPDATE articulo SET ? WHERE idArtic = ?', [editLink, idArtic]);

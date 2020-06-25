@@ -70,6 +70,7 @@ CREATE TABLE articulo(
   keywords BLOB(1000) NOT NULL,
   agradecimientos BLOB(1000),
   referencias BLOB(5000) NOT NULL,
+  correspondencia VARCHAR(60) NOT NULL,
   doi VARCHAR(300),
   urlgaleradahtml VARCHAR(300),
   publicacion_id INT(11) NOT NULL,
