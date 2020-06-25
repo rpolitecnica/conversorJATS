@@ -21,7 +21,11 @@ router.get('/visualarticle/:idArtic', isLoggedIn, async (req, res) => {
   //const doc = DOMParser().parseFromString(htmlFormato, 'text/html');
   //console.log(doc);
   if (archivoxml == 'Error' || htmlFormato == 'Error') {
-    req.flash('message', 'Validar el formato en los datos del artículo.');
+    if (archivoxml == 'Error') {
+      req.flash('message', 'Validar el formato en los datos del artículo. Descargar archivo');
+    } else {
+      req.flash('message', 'Validar el formato en los datos del artículo. En visualizar');
+    }
     res.redirect('/links/edit/' + idArtic);
   } else {
     res.render('links/verarticulo', { link: htmlFormato, idArtic: idArtic });
@@ -32,7 +36,7 @@ router.get('/descargarxml/:idArtic', isLoggedIn, async (req, res) => {
   const { idArtic } = req.params;
   const archivoxml = await creadorXML.crearArchivoXML(idArtic);
   if (archivoxml == 'Error') {
-    req.flash('message', 'Validar el formato en los datos del artículo.');
+    req.flash('message', 'Validar el formato en los datos del artículo. En descargar');
     res.redirect('/links/edit/' + idArtic);
   } else {
     res.download(dirPath + 'articleId' + idArtic + '.xml');

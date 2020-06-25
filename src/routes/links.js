@@ -99,7 +99,7 @@ router.get('/add/:id', isLoggedIn, async (req, res) => {
 //GET Router para guardar articulo
 router.post('/add/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params
-  const { titulo, title, edicion, numArticulo, doi, pagInicial, pagFinal,
+  var { titulo, title, edicion, numArticulo, doi, pagInicial, pagFinal,
     autores, fecRecibido, fecAceptado, fecPublicacion, resumen,
     abstract, palClaves, keywords, agradecimientos, referencias, urlgaleradahtml } = req.body;
 
@@ -107,6 +107,53 @@ router.post('/add/:id', isLoggedIn, async (req, res) => {
 
   var noExisteNumArticulo = false;
   var rangoPaginas = [];
+
+  //Parsea las referencias para ingresarlas a la base de datos.
+  const str = referencias.match(/(^.*).$/gm)
+  var referenciaModificado = '';
+  for (let index = 0; index < str.length; index++) {
+    if (index == str.length - 1) {
+      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';');
+    } else {
+      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';\n');
+    }
+  }
+  referencias = referenciaModificado;
+
+  //Parsea las palabrras claves para ingresarlas a la base de datos.
+  var palabrasClaves = '';
+  palabrasClaves = palClaves.replace(/(, |; |\. |.$)/gm, ';\n');
+  palabrasClaves = palabrasClaves.replace(/\n\B/gm, '');
+  palClaves = palabrasClaves;
+
+  //Parsea las keywords para ingresarlas a la base de datos.
+  var keywordsModificado = '';
+  keywordsModificado = keywords.replace(/(, |; |\. |.$)/gm, ';\n');
+  keywordsModificado = keywordsModificado.replace(/\n\B/gm, '');
+  keywords = keywordsModificado;
+
+  //Parsea los autores para ingresarlas a la base de datos.
+  var paraAutores = autores.replace(/, |$/gm, '\n');
+  paraAutores = paraAutores.replace(/\n\B/gm, '');
+  var verAutores = paraAutores.match(/(^.*)/gm);
+
+  var elemento = '';
+  var apellidos = '';
+  var nombres = '';
+  var nombreCompleto = '';
+  for (let index = 0; index < verAutores.length; index++) {
+    elemento = verAutores[index].match(/[^ ]\S*/gm)
+    apellidos = elemento[elemento.length - 2] + ' ' + elemento[elemento.length - 1] + ',';
+    if (elemento.length - 2 == 1) {
+      nombres = elemento[0];
+    } else {
+      nombres = elemento[0] + ' ' + elemento[1];;
+    }
+    nombreCompleto = nombreCompleto + apellidos + ' ' + nombres + ';\n';
+  }
+  nombreCompleto = nombreCompleto.replace(/\n\B/gm, '');
+  autores = nombreCompleto;
+  //res.redirect('/links/' + id);
 
   if (valoresArticulo.length == 0) {
     noExisteNumArticulo = true;
@@ -164,6 +211,7 @@ router.post('/add/:id', isLoggedIn, async (req, res) => {
     req.flash('message', 'El numero de pagina inicial y/o final ya pertenece a otro articulo ');
     res.redirect('/profile');
   }
+
 });
 
 //GET Router de formulario para crear Edicion
@@ -204,14 +252,14 @@ router.get('/:id', isLoggedIn, async (req, res) => {
     ON usert.id=publicacion.usert_id \
     WHERE publicacion.idPublica \
     IN (SELECT idPublica FROM publicacion) \
-    ORDER BY anyo DESC, volumen DESC, numero DESC');
+    ORDER BY anyo DESC, volumen DESC, numero DESC, idArtic ASC');
     res.render('links/list', { links, tipoUser: tipoUser });
   } else {
     links = await pool.query('SELECT * FROM articulo JOIN publicacion \
     ON publicacion.idPublica=articulo.publicacion_id \
     WHERE publicacion.idPublica \
     IN (SELECT idPublica FROM publicacion WHERE usert_id = ?) \
-    ORDER BY anyo DESC, volumen DESC, numero DESC', [id]);
+    ORDER BY anyo DESC, volumen DESC, numero DESC, idArtic ASC', [id]);
     res.render('links/list', { links, idUsuario: req.user.id });
   }
   //res.render('links/list', { links, id: id });
@@ -322,10 +370,57 @@ router.get('/edit/:idArtic', isLoggedIn, async (req, res) => {
 //POST Router para guardar el articulo editado
 router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite editar el numero de publicación
   const { idArtic } = req.params;
-  const { titulo, title, doi, autores, resumen, abstract, palClaves, keywords,
+  var { titulo, title, doi, autores, resumen, abstract, palClaves, keywords,
     agradecimientos, referencias, urlgaleradahtml } = req.body;
 
   const usert_id = await pool.query('SELECT publicacion.usert_id FROM articulo JOIN publicacion ON publicacion.idPublica=articulo.publicacion_id WHERE idArtic = ?', [idArtic]);
+
+
+  //Parsea las referencias para ingresarlas a la base de datos.
+  const str = referencias.match(/(^.*).$/gm)
+  var referenciaModificado = '';
+  for (let index = 0; index < str.length; index++) {
+    if (index == str.length - 1) {
+      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';');
+    } else {
+      referenciaModificado = referenciaModificado + str[index].replace(str[index], str[index] + ';\n');
+    }
+  }
+  referencias = referenciaModificado;
+
+  //Parsea las palabrras claves para ingresarlas a la base de datos.
+  var palabrasClaves = '';
+  palabrasClaves = palClaves.replace(/(, |; |\. |.$)/gm, ';\n');
+  palabrasClaves = palabrasClaves.replace(/\n\B/gm,'');
+  palClaves = palabrasClaves;
+
+  //Parsea las keywords para ingresarlas a la base de datos.
+  var keywordsModificado = '';
+  keywordsModificado = keywords.replace(/(, |; |\. |.$)/gm, ';\n');
+  keywordsModificado = keywordsModificado.replace(/\n\B/gm,'');
+  keywords = keywordsModificado;
+
+  //Parsea los autores para ingresarlas a la base de datos.
+  var paraAutores = autores.replace(/, |$/gm, '\n');
+  paraAutores = paraAutores.replace(/\n\B/gm, '');
+  var verAutores = paraAutores.match(/(^.*)/gm);
+
+  var elemento = '';
+  var apellidos = '';
+  var nombres = '';
+  var nombreCompleto = '';
+  for (let index = 0; index < verAutores.length; index++) {
+    elemento = verAutores[index].match(/[^ ]\S*/gm)
+    apellidos = elemento[elemento.length - 2] + ' ' + elemento[elemento.length - 1] + ',';
+    if (elemento.length - 2 == 1) {
+      nombres = elemento[0];
+    } else {
+      nombres = elemento[0] + ' ' + elemento[1];;
+    }
+    nombreCompleto = nombreCompleto + apellidos + ' ' + nombres + ';\n';
+  }
+  nombreCompleto = nombreCompleto.replace(/\n\B/gm, '');
+  autores = nombreCompleto;
 
   const editLink = {
     titulo,
@@ -343,6 +438,7 @@ router.post('/edit/:idArtic', isLoggedIn, async (req, res) => {//No se permite e
   await pool.query('UPDATE articulo SET ? WHERE idArtic = ?', [editLink, idArtic]);
   req.flash('success', 'Articulo guardado');
   res.redirect('/links/' + usert_id[0].usert_id);
+
 });
 
 

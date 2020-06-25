@@ -26,8 +26,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<em>
 		<xsl:if test="not(position() = 1)">,
 		</xsl:if>
-		<xsl:value-of select="surname"/><xsl:text> </xsl:text>
-		<xsl:value-of select="given-names"/>
+		<xsl:value-of select="given-names"/> <xsl:text> </xsl:text>
+		<xsl:value-of select="surname"/>
 		</em>
 	</xsl:for-each>
 
@@ -50,12 +50,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			</p>
     </xsl:for-each>
 
-	<p>DOI: 
+	<p>DOI:
 	<xsl:element name="a">
 		<xsl:attribute name="href">
-			<xsl:value-of select="front/article-meta/article-id"/>
+			https://doi.org/<xsl:value-of select="front/article-meta/article-id"/>
 		</xsl:attribute>
-			<xsl:value-of select="front/article-meta/article-id"/>
+			https://doi.org/<xsl:value-of select="front/article-meta/article-id"/>
 	</xsl:element>
 </p>
 	</body>
